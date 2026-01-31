@@ -1,7 +1,12 @@
-import React from 'react';
-import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import emailjs from '@emailjs/browser';
 
 const Contact = () => {
+    // Replace these with your actual EmailJS credentials
+    // It's best practice to use environment variables, e.g., import.meta.env.VITE_EMAILJS_SERVICE_ID
+    const SERVICE_ID = process.env.VITE_EMAILJS_SERVICE_ID;
+    const TEMPLATE_ID = process.env.VITE_EMAILJS_TEMPLATE_ID;
+    const PUBLIC_KEY = process.env.VITE_EMAILJS_PUBLIC_KEY;
+
     const [formData, setFormData] = React.useState({
         firstName: '',
         lastName: '',
@@ -46,12 +51,24 @@ const Contact = () => {
         setIsSubmitting(true);
         setSubmitStatus(null);
 
-        // Simulate API call
+        const templateParams = {
+            from_name: `${formData.firstName} ${formData.lastName}`,
+            from_email: formData.email,
+            message: formData.message,
+            to_name: "AI Consult Team" // Or whatever variable matches your template
+        };
+
         try {
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            await emailjs.send(
+                SERVICE_ID,
+                TEMPLATE_ID,
+                templateParams,
+                PUBLIC_KEY
+            );
             setSubmitStatus('success');
             setFormData({ firstName: '', lastName: '', email: '', message: '' });
         } catch (error) {
+            console.error('EmailJS Error:', error);
             setSubmitStatus('error');
         } finally {
             setIsSubmitting(false);
