@@ -1,15 +1,18 @@
+import React from 'react';
+import { Mail, Phone, MapPin, Send } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 
 const Contact = () => {
     // Replace these with your actual EmailJS credentials
     // It's best practice to use environment variables, e.g., import.meta.env.VITE_EMAILJS_SERVICE_ID
-    const SERVICE_ID = process.env.VITE_EMAILJS_SERVICE_ID;
-    const TEMPLATE_ID = process.env.VITE_EMAILJS_TEMPLATE_ID;
-    const PUBLIC_KEY = process.env.VITE_EMAILJS_PUBLIC_KEY;
+    const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+    const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
     const [formData, setFormData] = React.useState({
-        firstName: '',
-        lastName: '',
+        name: '',
+        subject: '',
+        phone: '',
         email: '',
         message: ''
     });
@@ -19,8 +22,9 @@ const Contact = () => {
 
     const validate = () => {
         const newErrors = {};
-        if (!formData.firstName.trim()) newErrors.firstName = 'First name is required';
-        if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
+        if (!formData.name.trim()) newErrors.name = 'First name is required';
+        if (!formData.subject.trim()) newErrors.subject = 'Last name is required';
+        if (!formData.phone.trim()) newErrors.phone = 'Last name is required';
         if (!formData.email.trim()) {
             newErrors.email = 'Email is required';
         } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
@@ -52,7 +56,7 @@ const Contact = () => {
         setSubmitStatus(null);
 
         const templateParams = {
-            from_name: `${formData.firstName} ${formData.lastName}`,
+            from_name: `${formData.name} ${formData.subject}`,
             from_email: formData.email,
             message: formData.message,
             to_name: "AI Consult Team" // Or whatever variable matches your template
@@ -66,7 +70,7 @@ const Contact = () => {
                 PUBLIC_KEY
             );
             setSubmitStatus('success');
-            setFormData({ firstName: '', lastName: '', email: '', message: '' });
+            setFormData({ name: '', subject: '', phone: '', email: '', message: '' });
         } catch (error) {
             console.error('EmailJS Error:', error);
             setSubmitStatus('error');
@@ -131,29 +135,41 @@ const Contact = () => {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 dark:text-gray-400 mb-2 transition-colors duration-300">First Name</label>
+                                <label className="block text-sm font-medium text-slate-700 dark:text-gray-400 mb-2 transition-colors duration-300">Name</label>
                                 <input
                                     type="text"
-                                    name="firstName"
-                                    value={formData.firstName}
+                                    name="name"
+                                    value={formData.name}
                                     onChange={handleChange}
-                                    className={`w-full bg-slate-50 dark:bg-slate-900 border rounded-lg px-4 py-3 text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 transition-colors duration-300 ${errors.firstName ? 'border-red-500' : 'border-slate-300 dark:border-slate-600'}`}
+                                    className={`w-full bg-slate-50 dark:bg-slate-900 border rounded-lg px-4 py-3 text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 transition-colors duration-300 ${errors.name ? 'border-red-500' : 'border-slate-300 dark:border-slate-600'}`}
                                     placeholder="John"
                                 />
-                                {errors.firstName && <p className="mt-1 text-sm text-red-500">{errors.firstName}</p>}
+                                {errors.name && <p className="mt-1 text-sm text-red-500">{errors.name}</p>}
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 dark:text-gray-400 mb-2 transition-colors duration-300">Last Name</label>
+                                <label className="block text-sm font-medium text-slate-700 dark:text-gray-400 mb-2 transition-colors duration-300">Subject</label>
                                 <input
                                     type="text"
-                                    name="lastName"
-                                    value={formData.lastName}
+                                    name="subject"
+                                    value={formData.subject}
                                     onChange={handleChange}
-                                    className={`w-full bg-slate-50 dark:bg-slate-900 border rounded-lg px-4 py-3 text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 transition-colors duration-300 ${errors.lastName ? 'border-red-500' : 'border-slate-300 dark:border-slate-600'}`}
-                                    placeholder="Doe"
+                                    className={`w-full bg-slate-50 dark:bg-slate-900 border rounded-lg px-4 py-3 text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 transition-colors duration-300 ${errors.subject ? 'border-red-500' : 'border-slate-300 dark:border-slate-600'}`}
+                                    placeholder="Subject"
                                 />
-                                {errors.lastName && <p className="mt-1 text-sm text-red-500">{errors.lastName}</p>}
+                                {errors.subject && <p className="mt-1 text-sm text-red-500">{errors.subject}</p>}
                             </div>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-gray-400 mb-2 transition-colors duration-300">Phone</label>
+                            <input
+                                type="text"
+                                name="phone"
+                                value={formData.phone}
+                                onChange={handleChange}
+                                className={`w-full bg-slate-50 dark:bg-slate-900 border rounded-lg px-4 py-3 text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 transition-colors duration-300 ${errors.phone ? 'border-red-500' : 'border-slate-300 dark:border-slate-600'}`}
+                                placeholder="1234567890"
+                            />
+                            {errors.phone && <p className="mt-1 text-sm text-red-500">{errors.phone}</p>}
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-slate-700 dark:text-gray-400 mb-2 transition-colors duration-300">Email Address</label>
