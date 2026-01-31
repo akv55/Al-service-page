@@ -22,11 +22,11 @@ const Contact = () => {
 
     const validate = () => {
         const newErrors = {};
-        if (!formData.name.trim()) newErrors.name = 'First name is required';
-        if (!formData.subject.trim()) newErrors.subject = 'Last name is required';
-        if (!formData.phone.trim()) newErrors.phone = 'Last name is required';
+        if (!formData.name.trim()) newErrors.name = "Name is required";
+        if (!formData.subject.trim()) newErrors.subject = "Subject is required";
+        if (!formData.phone.trim()) newErrors.phone = "Phone is required";
         if (!formData.email.trim()) {
-            newErrors.email = 'Email is required';
+            newErrors.email = "Email is required";
         } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
             newErrors.email = 'Please enter a valid email';
         }
@@ -56,10 +56,12 @@ const Contact = () => {
         setSubmitStatus(null);
 
         const templateParams = {
-            from_name: `${formData.name} ${formData.subject}`,
-            from_email: formData.email,
+            name: formData.name,
+            subject: formData.subject,
+            phone: formData.phone,
+            email: formData.email,
             message: formData.message,
-            to_name: "AI Consult Team" // Or whatever variable matches your template
+            to_name: "AI Consult Team"
         };
 
         try {
